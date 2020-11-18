@@ -9,3 +9,4 @@ ARG PI_PASSWORD
 RUN echo "pi:${PI_PASSWORD}" | chpasswd
 
 ADD root-overlay /
+RUN chown -R pi /home/pi
