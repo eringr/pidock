@@ -54,13 +54,13 @@ trap 'do_umount' ERR
 
 sudo mkfs.fat ${LODEV}p1
 sudo mount ${LODEV}p1 /mnt
-sudo tar xf boot.tar -C /mnt
+sudo tar xf boot.tar -C /mnt --numeric-owner
 sudo rsync ${RSYNC_FLAGS} boot-overlay/ /mnt
 sudo umount /mnt
 
 sudo mkfs.ext4 ${LODEV}p2
 sudo mount ${LODEV}p2 /mnt
-sudo tar xf custom-root.tar -C /mnt
+sudo tar xf custom-root.tar -C /mnt --numeric-owner
 
 sudo /bin/bash -c "echo $1 > /mnt/etc/hostname"
 

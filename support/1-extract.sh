@@ -35,12 +35,12 @@ trap 'do_umount' ERR
 echo "Creating boot.tar"
 
 sudo mount ${LODEV}p1 /mnt
-sudo tar cf boot.tar -C /mnt .
+sudo tar cf boot.tar -C /mnt --numeric-owner .
 sudo umount /mnt
 
 echo "Creating root.tar"
 
 sudo mount ${LODEV}p2 /mnt
-sudo tar cf root.tar -C /mnt .
+sudo tar cf root.tar -C /mnt --numeric-owner .
 
 do_umount
