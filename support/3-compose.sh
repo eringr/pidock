@@ -52,7 +52,7 @@ ${CUSTOM_IMG_NAME}1 : start=8192, size=524288, type=c, bootable
 ${CUSTOM_IMG_NAME}2 : start=532480, size=3661824, type=83, bootable
 EOF
 
-CONTAINER=$(docker run -d --rm raspi-custom sleep 10)
+CONTAINER=$(docker run -d --rm raspi-custom sleep 60)
 docker export ${CONTAINER} > custom-root.tar
 
 sudo losetup -P ${LODEV} ${CUSTOM_IMG_NAME}
