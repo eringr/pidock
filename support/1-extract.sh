@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-LODEV=/dev/loop990
-
 if [ -z "$1" ] ; then
     echo "No file given"
     exit 1
@@ -28,7 +26,10 @@ fi
 do_umount
 set -e
 
-sudo losetup -P ${LODEV} $1
+losetup -a | grep "${1}" | awk -F: '{ print $1 }' | \
+    xargs -r sudo losetup -d
+sudo losetup -fP ${1}
+LODEV=$(losetup -a | grep "${1}" | awk -F: '{ print $1 }')
 trap 'do_umount' ERR
 
 echo "Creating boot.tar"

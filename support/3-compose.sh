@@ -17,9 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 export CUSTOM_IMG_NAME=custom.img
-
 RSYNC_FLAGS="-vh --progress --modify-window=1 --recursive --ignore-errors"
-LODEV=/dev/loop990
 
 if [ -z "$1" ] ; then
     echo "No hostname given"
@@ -48,7 +46,10 @@ EOF
 CONTAINER=$(docker run -d --rm raspi-custom sleep 60)
 docker export ${CONTAINER} > custom-root.tar
 
-sudo losetup -P ${LODEV} ${CUSTOM_IMG_NAME}
+losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }' | \
+    xargs -r sudo losetup -d
+sudo losetup -fP ${CUSTOM_IMG_NAME}
+LODEV=$(losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }')
 trap 'do_umount' ERR
 
 sudo mkfs.fat ${LODEV}p1
