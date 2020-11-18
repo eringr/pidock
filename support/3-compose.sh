@@ -26,14 +26,7 @@ if [ -z "$1" ] ; then
     exit 1
 fi
 
-do_umount() {
-    RETURNCODE=$?
-    if grep -qs '/mnt' /proc/mounts; then
-        sudo umount /mnt
-    fi
-    losetup ${LODEV} > /dev/null 2>&1 && sudo losetup -d ${LODEV}
-    return $RETURNCODE
-}
+. $(dirname "$0")/functions.sh
 
 do_umount
 set -e

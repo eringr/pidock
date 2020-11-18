@@ -16,30 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-LODEV=/dev/loop990
-
-if [ -z "$1" ] ; then
-    echo "No file given"
-    exit 1
-fi
-
-. $(dirname "$0")/functions.sh
-
-do_umount
-set -e
-
-sudo losetup -P ${LODEV} $1
-trap 'do_umount' ERR
-
-echo "Creating boot.tar"
-
-sudo mount ${LODEV}p1 /mnt
-sudo tar cf boot.tar -C /mnt .
-sudo umount /mnt
-
-echo "Creating root.tar"
-
-sudo mount ${LODEV}p2 /mnt
-sudo tar cf root.tar -C /mnt .
-
-do_umount
+function do_umount() {
+    RETURNCODE=$?
+    if grep -qs '/mnt' /proc/mounts; then
+        sudo umount /mnt
+    fi
+    if [ -n "${LODEV}" ]; then
+        sudo losetup -d "${LODEV}"
+    fi
+    return $RETURNCODE
+}
