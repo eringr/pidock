@@ -41,15 +41,7 @@ LABEL_ID=$(sudo sfdisk -l ${LODEV} | awk '$2 == "identifier:" {print $3}')
 sudo echo "Creating custom image"
 dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=4M count=512
 
-sfdisk ${CUSTOM_IMG_NAME} <<EOF
-label: dos
-label-id: ${LABEL_ID}
-device: new.img
-unit: sectors
-
-${CUSTOM_IMG_NAME}1 : start=8192, size=524288, type=c, bootable
-${CUSTOM_IMG_NAME}2 : start=532480, size=3661824, type=83, bootable
-EOF
+sfdisk ${CUSTOM_IMG_NAME} < "${PT_FILENAME}"
 
 CONTAINER=$(docker run -d --rm raspi-custom sleep 60)
 docker export ${CONTAINER} > custom-root.tar

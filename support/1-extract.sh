@@ -26,6 +26,8 @@ fi
 do_umount
 set -e
 
+sfdisk -d "${1}" > "${PT_FILENAME}"
+
 losetup -a | grep "${1}" | awk -F: '{ print $1 }' | \
     xargs -r sudo losetup -d
 sudo losetup -fP ${1}

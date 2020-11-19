@@ -26,3 +26,5 @@ function do_umount() {
     fi
     return $RETURNCODE
 }
+
+export PT_FILENAME="partition_table.txt"
