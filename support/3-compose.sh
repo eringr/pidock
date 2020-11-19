@@ -30,12 +30,20 @@ do_umount
 set -e
 set -x
 
+losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }' | \
+    xargs -r sudo losetup -d
+sudo losetup -fP ${CUSTOM_IMG_NAME}
+LODEV=$(losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }')
+trap 'do_umount' ERR
+
+LABEL_ID=$(sudo sfdisk -l ${LODEV} | awk '$2 == "identifier:" {print $3}')
+
 sudo echo "Creating custom image"
 dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=4M count=512
 
 sfdisk ${CUSTOM_IMG_NAME} <<EOF
 label: dos
-label-id: 0x738a4d67
+label-id: ${LABEL_ID}
 device: new.img
 unit: sectors
 
@@ -45,12 +53,6 @@ EOF
 
 CONTAINER=$(docker run -d --rm raspi-custom sleep 60)
 docker export ${CONTAINER} > custom-root.tar
-
-losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }' | \
-    xargs -r sudo losetup -d
-sudo losetup -fP ${CUSTOM_IMG_NAME}
-LODEV=$(losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }')
-trap 'do_umount' ERR
 
 sudo mkfs.fat ${LODEV}p1
 sudo mount ${LODEV}p1 /mnt
