@@ -72,8 +72,4 @@ binary
 
 ## Author
 
-Erin Hensel `<hens0093@gmail.com>`; all copyrights assigned to:
-
-Boulder Engineering Studio `<info@boulderes.com>`\
-3297 Walnut St\
-Boulder, CO 80301
+Erin Hensel `<hens0093@gmail.com>`; Copyright 2020 Boulder Engineering Studio
