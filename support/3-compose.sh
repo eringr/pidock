@@ -30,18 +30,20 @@ do_umount
 set -e
 set -x
 
+# Removing previous loopback device
 losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }' | \
     xargs -r sudo losetup -d
+
+echo "Creating custom image"
+
+# Initialize image file
+dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=4M count=512
+# Copying partition table from base Raspbian image (saved in 'extract')
+sfdisk ${CUSTOM_IMG_NAME} < "${PT_FILENAME}"
+# Create loopback device
 sudo losetup -fP ${CUSTOM_IMG_NAME}
 LODEV=$(losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }')
 trap 'do_umount' ERR
-
-LABEL_ID=$(sudo sfdisk -l ${LODEV} | awk '$2 == "identifier:" {print $3}')
-
-sudo echo "Creating custom image"
-dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=4M count=512
-
-sfdisk ${CUSTOM_IMG_NAME} < "${PT_FILENAME}"
 
 CONTAINER=$(docker run -d --rm raspi-custom sleep 60)
 docker export ${CONTAINER} > custom-root.tar
