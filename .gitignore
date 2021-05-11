@@ -3,3 +3,4 @@ custom-root.tar
 boot.tar
 custom.img
 raspbian.img
+partition_table.txt
