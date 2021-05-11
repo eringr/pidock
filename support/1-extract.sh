@@ -26,6 +26,7 @@ fi
 do_umount
 set -e
 
+echo "Creating ${PT_FILENAME}"
 sfdisk -d "${1}" > "${PT_FILENAME}"
 
 losetup -a | grep "${1}" | awk -F: '{ print $1 }' | \
