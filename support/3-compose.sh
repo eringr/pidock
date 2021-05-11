@@ -19,12 +19,17 @@
 export CUSTOM_IMG_NAME=custom.img
 RSYNC_FLAGS="-vh --progress --modify-window=1 --recursive --ignore-errors"
 
+. $(dirname "$0")/functions.sh
+
 if [ -z "$1" ] ; then
     echo "No hostname given"
     exit 1
 fi
 
-. $(dirname "$0")/functions.sh
+if [ ! -f "${PT_FILENAME}" ] ; then
+    echo "No partition table found (${PT_FILENAME}). Run 'extract' first!"
+    exit 1
+fi
 
 do_umount
 set -e
