@@ -31,6 +31,10 @@ if [ ! -f "${PT_FILENAME}" ] ; then
     exit 1
 fi
 
+if [ -z "$CUSTOM_IMG_SIZE" ] ; then
+    export CUSTOM_IMG_SIZE=4096
+fi
+
 do_umount
 set -e
 set -x
@@ -42,7 +46,7 @@ losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }' | \
 echo "Creating custom image"
 
 # Initialize image file
-dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=4M count=512
+dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=1M count=${CUSTOM_IMG_SIZE}
 # Copying partition table from base Raspbian image (saved in 'extract')
 sfdisk ${CUSTOM_IMG_NAME} < "${PT_FILENAME}"
 # Create loopback device

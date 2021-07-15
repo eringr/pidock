@@ -70,6 +70,10 @@ Note: currently requires sudo access to work around multiple permission issues
 Your binfmt_misc isn't set up correctly and docker is unable to run an ARM
 binary
 
+`No space left on device`
+
+Export CUSTOM_IMG_SIZE={Size in MiB of output image file} larger, default 4096 (4GiB)
+
 ## Author
 
 Erin Hensel `<hens0093@gmail.com>`; Copyright 2020 Boulder Engineering Studio
