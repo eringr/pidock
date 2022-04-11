@@ -72,7 +72,9 @@ binary
 
 `No space left on device`
 
-Export CUSTOM_IMG_SIZE={Size in MiB of output image file} larger, default 4096 (4GiB)
+Export CUSTOM_IMG_SIZE={Size in MiB of output image file} larger, default 4096 (4GiB).
+
+If the above does not fix the issue (Check the sizeof(boot.tar + custom-root.tar) < CUSTOM_IMG_SIZE), Docker may be out of allocated space. The command `docker system prune` can be used to clean up old docker image data (use with care - removed contents are not recoverable).
 
 ## Author
 
