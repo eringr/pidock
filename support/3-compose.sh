@@ -49,6 +49,9 @@ echo "Creating custom image"
 dd if=/dev/zero of=./${CUSTOM_IMG_NAME} bs=1M count=${CUSTOM_IMG_SIZE}
 # Copying partition table from base Raspbian image (saved in 'extract')
 sfdisk ${CUSTOM_IMG_NAME} < "${PT_FILENAME}"
+# Increase the linux partition size to the remaining space within CUSTOM_IMG_SIZE
+echo ", +" | sfdisk custom.img -N 2
+
 # Create loopback device
 sudo losetup -fP ${CUSTOM_IMG_NAME}
 LODEV=$(losetup -a | grep "${CUSTOM_IMG_NAME}" | awk -F: '{ print $1 }')
