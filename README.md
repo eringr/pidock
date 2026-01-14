@@ -2,22 +2,23 @@
 # Dockerfile-driven raspberry pi disk image creator "pidock"
 
 TIRED: Maintaining your fleet of raspberry pi devices by running commands and
-writing things on them ad-hoc and probably replicating by manually creating
-large, corruptible disk images with undocumented contents
+writing things on them ad-hoc and replicating by creating
+large, corruptible full disk clones with undocumented contents
 
-WIRED: Maintaining your fleet of raspberry pi devices by generating disk images
-from a dockerfile containing their IP in one place concentrated enough
-to be self-documenting and highly reproducible, able to be deployed onto the
+WIRED: Maintaining your fleet of raspberry pi devices by generating disk images from one source 
+concentrated enough to be self-documenting - a dockerfile, able to be built onto the
 latest version of an upstream base image
+
+The resulting image is able to be flashed onto SD cards directly despite having been built through a Dockerfile.  Building an SD image this way has an added benefit of automatically executing RUN commands in an appropriate emulator without needing to boot into the SD image directly (and e.g. triggering automatic partition expansion) to run them.
 
 ## Requirements
 
 To run commands as pi root during image build, the host machine must be
 set up with binfmt_misc to run qemu for arm binaries
 
-On ubuntu 20: `apt install qemu-user-static`
+On ubuntu 22: `apt install qemu-user-static`
 
-This package doesn't install binfmt_misc properly prior to ubuntu 20.  Run
+This package doesn't install binfmt_misc properly prior to ubuntu 22.  Run
 `./binfmt_setup.sh` if you're running an older version of ubuntu or debian.
  Other distributions might require other packages or steps.
 
@@ -76,4 +77,4 @@ Export CUSTOM_IMG_SIZE={Size in MiB of output image file} larger, default 4096 (
 
 ## Author
 
-Erin Hensel `<hens0093@gmail.com>`; Copyright 2020 Boulder Engineering Studio
+Erin Hensel `<erin@futurevision.systems>`
